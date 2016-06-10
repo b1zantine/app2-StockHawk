@@ -4,6 +4,7 @@ import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.Binder;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
@@ -23,19 +24,25 @@ public class QuoteWidgetRemoteFactory implements RemoteViewsService.RemoteViewsF
 
     QuoteWidgetRemoteFactory(Context context, Intent intent){
         this.context = context;
-        cursor = context.getContentResolver().query(QuoteProvider.Quotes.CONTENT_URI,
-                new String[]{QuoteColumns.SYMBOL, QuoteColumns.CHANGE},
-                "is_current = ?", new String[]{"1"}, null);
-
     }
     @Override
     public void onCreate() {
-
+        loadCursor();
     }
 
     @Override
     public void onDataSetChanged() {
+        loadCursor();
+    }
 
+    public void loadCursor(){
+        final long identityToken = Binder.clearCallingIdentity();
+
+        cursor = context.getContentResolver().query(QuoteProvider.Quotes.CONTENT_URI,
+                new String[]{QuoteColumns.SYMBOL, QuoteColumns.CHANGE},
+                "is_current = ?", new String[]{"1"}, null);
+
+        Binder.restoreCallingIdentity(identityToken);
     }
 
     @Override
