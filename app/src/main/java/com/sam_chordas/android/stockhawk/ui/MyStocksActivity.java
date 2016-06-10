@@ -69,7 +69,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
         // GCMTaskService can only schedule tasks, they cannot execute immediately
         mServiceIntent = new Intent(this, StockIntentService.class);
         if (savedInstanceState == null) {
-            // Run the initialize task service so that some stocks appear upon an empty database
+            // Run the initialize task service so that some stocks appear upon an empty databaseb
             mServiceIntent.putExtra("tag", "init");
             if (isConnected) {
                 startService(mServiceIntent);

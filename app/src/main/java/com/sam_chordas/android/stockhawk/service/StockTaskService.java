@@ -7,6 +7,8 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.os.RemoteException;
 import android.util.Log;
+import android.widget.Toast;
+
 import com.google.android.gms.gcm.GcmNetworkManager;
 import com.google.android.gms.gcm.GcmTaskService;
 import com.google.android.gms.gcm.TaskParams;
@@ -125,6 +127,9 @@ public class StockTaskService extends GcmTaskService{
               Utils.quoteJsonToContentVals(getResponse));
         }catch (RemoteException | OperationApplicationException e){
           Log.e(LOG_TAG, "Error applying batch insert", e);
+        }catch (NumberFormatException e) {
+            Log.e(LOG_TAG, "Invalid Values: " + e);
+            Toast.makeText(mContext.getApplicationContext(),"Invalid Symbol",Toast.LENGTH_SHORT).show();
         }
       } catch (IOException e){
         e.printStackTrace();

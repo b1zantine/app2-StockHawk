@@ -2,6 +2,7 @@ package com.sam_chordas.android.stockhawk.rest;
 
 import android.content.ContentProviderOperation;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.sam_chordas.android.stockhawk.data.QuoteColumns;
 import com.sam_chordas.android.stockhawk.data.QuoteProvider;
@@ -21,7 +22,7 @@ public class Utils {
 
     public static boolean showPercent = true;
 
-    public static ArrayList quoteJsonToContentVals(String JSON) {
+    public static ArrayList quoteJsonToContentVals(String JSON) throws NumberFormatException{
         ArrayList<ContentProviderOperation> batchOperations = new ArrayList<>();
         JSONObject jsonObject = null;
         JSONArray resultsArray = null;
@@ -48,8 +49,6 @@ public class Utils {
             }
         } catch (JSONException e) {
             Log.e(LOG_TAG, "String to JSON failed: " + e);
-        }catch (NumberFormatException e) {
-            Log.e(LOG_TAG, "Invalid Values: " + e);
         }
         return batchOperations;
     }
