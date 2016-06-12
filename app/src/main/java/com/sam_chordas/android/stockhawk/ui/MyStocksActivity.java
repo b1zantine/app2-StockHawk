@@ -1,9 +1,12 @@
 package com.sam_chordas.android.stockhawk.ui;
 
 import android.app.LoaderManager;
+import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
@@ -55,6 +58,8 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
     private Cursor mCursor;
     boolean isConnected;
 
+    private ProgressDialog progressDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,13 +71,24 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
         isConnected = activeNetwork != null &&
                 activeNetwork.isConnectedOrConnecting();
         setContentView(R.layout.activity_my_stocks);
+
+        IntentFilter filter = new IntentFilter(ResponseReceiver.ACTION_RESP);
+        filter.addCategory(Intent.CATEGORY_DEFAULT);
+        ResponseReceiver receiver = new ResponseReceiver();
+        registerReceiver(receiver, filter);
+
         // The intent service is for executing immediate pulls from the Yahoo API
         // GCMTaskService can only schedule tasks, they cannot execute immediately
         mServiceIntent = new Intent(this, StockIntentService.class);
+        progressDialog = new ProgressDialog(this);
         if (savedInstanceState == null) {
-            // Run the initialize task service so that some stocks appear upon an empty databaseb
+            // Run the initialize task service so that some stocks appear upon an empty database
             mServiceIntent.putExtra("tag", "init");
             if (isConnected) {
+                progressDialog.setIndeterminate(true);
+                progressDialog.setMessage("Updating stocks ...");
+                progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                progressDialog.show();
                 startService(mServiceIntent);
             } else {
                 networkToast();
@@ -87,14 +103,18 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
                 new RecyclerViewItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View v, int position) {
-                        String symbol = ((TextView)v.findViewById(R.id.stock_symbol))
-                                .getText()
-                                .toString()
-                                .trim()
-                                .toLowerCase();
-                        Intent intent = new Intent(getApplicationContext(), LineGraphActivity.class);
-                        intent.putExtra("symbol", symbol);
-                        startActivity(intent);
+                        if (isConnected) {
+                            String symbol = ((TextView) v.findViewById(R.id.stock_symbol))
+                                    .getText()
+                                    .toString()
+                                    .trim()
+                                    .toLowerCase();
+                            Intent intent = new Intent(getApplicationContext(), LineGraphActivity.class);
+                            intent.putExtra("symbol", symbol);
+                            startActivity(intent);
+                        }else{
+                            networkToast();
+                        }
                     }
                 }));
         recyclerView.setAdapter(mCursorAdapter);
@@ -232,6 +252,18 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         mCursorAdapter.swapCursor(null);
+    }
+
+    public class ResponseReceiver extends BroadcastReceiver {
+        public static final String ACTION_RESP =
+                "com.sam_chordas.android.intent.DATA_RECEIVED";
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if(intent.getIntExtra("success", 0) == 1){
+                progressDialog.dismiss();
+                mCursorAdapter.notifyDataSetChanged();
+            }
+        }
     }
 
 }

@@ -13,4 +13,6 @@
     <string name="network_toast">Uh-oh! This app requires an internet connection</string>
     <string name="add_new_stock_symbol">Add New Stock Symbol</string>
     <string name="chart_desc">Candle Stick chart displaying stock details over the past month</string>
+    <string name="loading_stock_data">Loading stock data</string>
+    <string name="updating_data">Updating Data...</string>
 </resources>
