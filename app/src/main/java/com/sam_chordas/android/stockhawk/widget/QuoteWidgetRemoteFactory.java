@@ -36,12 +36,13 @@ public class QuoteWidgetRemoteFactory implements RemoteViewsService.RemoteViewsF
     }
 
     public void loadCursor(){
+        // Revert back to our process' identity so we can work with our content provider
         final long identityToken = Binder.clearCallingIdentity();
 
         cursor = context.getContentResolver().query(QuoteProvider.Quotes.CONTENT_URI,
                 new String[]{QuoteColumns.SYMBOL, QuoteColumns.CHANGE},
                 "is_current = ?", new String[]{"1"}, null);
-
+        // Restore the identity
         Binder.restoreCallingIdentity(identityToken);
     }
 

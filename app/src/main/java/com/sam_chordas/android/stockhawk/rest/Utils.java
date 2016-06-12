@@ -6,6 +6,7 @@ import android.widget.Toast;
 
 import com.sam_chordas.android.stockhawk.data.QuoteColumns;
 import com.sam_chordas.android.stockhawk.data.QuoteProvider;
+import com.sam_chordas.android.stockhawk.data.model.Quote;
 
 import java.util.ArrayList;
 
@@ -53,9 +54,9 @@ public class Utils {
         return batchOperations;
     }
 
-    public static String truncateBidPrice(String bidPrice) {
-        bidPrice = String.format("%.2f", Float.parseFloat(bidPrice));
-        return bidPrice;
+    public static String truncatePrice(String price) {
+        price = String.format("%.2f", Float.parseFloat(price));
+        return price;
     }
 
     public static String truncateChange(String change, boolean isPercentChange) {
@@ -81,7 +82,7 @@ public class Utils {
         try {
             String change = jsonObject.getString("Change");
             builder.withValue(QuoteColumns.SYMBOL, jsonObject.getString("symbol"));
-            builder.withValue(QuoteColumns.BIDPRICE, truncateBidPrice(jsonObject.getString("Bid")));
+            builder.withValue(QuoteColumns.BIDPRICE, truncatePrice(jsonObject.getString("Bid")));
             builder.withValue(QuoteColumns.PERCENT_CHANGE, truncateChange(
                     jsonObject.getString("ChangeinPercent"), true));
             builder.withValue(QuoteColumns.CHANGE, truncateChange(change, false));
@@ -96,5 +97,53 @@ public class Utils {
             e.printStackTrace();
         }
         return builder.build();
+    }
+
+
+    public static ArrayList<Quote> parseQuoteJson(String JSON){
+        ArrayList<Quote> historicalData = new ArrayList<>();
+        JSONObject jsonObject = null;
+        JSONArray resultsArray = null;
+        try {
+            jsonObject = new JSONObject(JSON);
+            if (jsonObject != null && jsonObject.length() != 0) {
+                jsonObject = jsonObject.getJSONObject("query");
+                int count = Integer.parseInt(jsonObject.getString("count"));
+                if (count == 1) {
+                    jsonObject = jsonObject.getJSONObject("results")
+                            .getJSONObject("quote");
+                    historicalData.add(quoteJsonToPojo(jsonObject));
+                } else {
+                    resultsArray = jsonObject.getJSONObject("results").getJSONArray("quote");
+
+                    if (resultsArray != null && resultsArray.length() != 0) {
+                        for (int i = 0; i < resultsArray.length(); i++) {
+                            jsonObject = resultsArray.getJSONObject(i);
+                            historicalData.add(quoteJsonToPojo(jsonObject));
+                        }
+                    }
+                }
+            }
+        } catch (JSONException e) {
+            Log.e(LOG_TAG, "JSON String to POJO failed: " + e);
+        }
+        return historicalData;
+    }
+
+    public static Quote quoteJsonToPojo(JSONObject object){
+        Quote quote = new Quote();
+        try {
+            quote.setSymbol(object.getString("Symbol"));
+            quote.setDate(object.getString("Date"));
+            quote.setOpen(Float.parseFloat(object.getString("Open")));
+            quote.setHigh(Float.parseFloat(object.getString("High")));
+            quote.setLow(Float.parseFloat(object.getString("Low")));
+            quote.setClose(Float.parseFloat(object.getString("Close")));
+            quote.setVolume(object.getString("Volume"));
+            quote.setAdjClose(object.getString("Adj_Close"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return quote;
     }
 }
