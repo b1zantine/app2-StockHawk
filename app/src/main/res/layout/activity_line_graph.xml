@@ -8,7 +8,8 @@
     <com.github.mikephil.charting.charts.CandleStickChart
         android:id="@+id/candle_chart"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:contentDescription="@string/chart_desc"/>
 
     <android.support.v4.widget.ContentLoadingProgressBar
         android:id="@+id/progress_bar"

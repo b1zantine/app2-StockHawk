@@ -12,4 +12,5 @@
     <string name="widget_title">Today\'s Market</string>
     <string name="network_toast">Uh-oh! This app requires an internet connection</string>
     <string name="add_new_stock_symbol">Add New Stock Symbol</string>
+    <string name="chart_desc">Candle Stick chart displaying stock details over the past month</string>
 </resources>
