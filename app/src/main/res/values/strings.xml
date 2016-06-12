@@ -13,6 +13,10 @@
     <string name="network_toast">Uh-oh! This app requires an internet connection</string>
     <string name="add_new_stock_symbol">Add New Stock Symbol</string>
     <string name="chart_desc">Candle Stick chart displaying stock details over the past month</string>
+    <string name="ohlc_data">OHLC Data of last 30 days</string>
+    <string name="invalid_symbol">Invalid Symbol</string>
     <string name="loading_stock_data">Loading stock data</string>
-    <string name="updating_data">Updating Data...</string>
+    <string name="updating_stocks">Updating Stocks…</string>
+    <string name="stock_already_saved">This stock is already saved!</string>
+    <string name="check_net_conn">Please check your Internet Connection.</string>
 </resources>

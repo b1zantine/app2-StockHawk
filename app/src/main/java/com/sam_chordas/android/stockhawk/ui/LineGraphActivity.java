@@ -51,7 +51,7 @@ public class LineGraphActivity extends Activity {
         setContentView(R.layout.activity_line_graph);
 
         candleChart = (CandleStickChart) findViewById(R.id.candle_chart);
-        candleChart.setDescription("OHLC Data of last 30 days");
+        candleChart.setDescription(getString(R.string.ohlc_data));
         candleChart.setDescriptionColor(ContextCompat.getColor(this,R.color.material_blue_500));
         Legend legend = candleChart.getLegend();
         legend.setTextColor(ContextCompat.getColor(this,R.color.material_blue_500));
@@ -124,7 +124,7 @@ public class LineGraphActivity extends Activity {
                         candleChart.setVisibility(View.VISIBLE);
                         Toast.makeText(
                                 LineGraphActivity.this,
-                                "Check your Internet Connection",
+                                getString(R.string.check_net_conn),
                                 Toast.LENGTH_SHORT
                         ).show();
                     }

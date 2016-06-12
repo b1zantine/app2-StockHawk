@@ -139,7 +139,7 @@ public class StockTaskService extends GcmTaskService{
           Log.e(LOG_TAG, "Error applying batch insert", e);
         }catch (NumberFormatException e) {
             Log.e(LOG_TAG, "Invalid Values: " + e);
-            Toast.makeText(mContext.getApplicationContext(),"Invalid Symbol",Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext.getApplicationContext(),getString(R.string.invalid_symbol),Toast.LENGTH_SHORT).show();
         }
       } catch (IOException e){
         e.printStackTrace();
