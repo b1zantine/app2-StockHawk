@@ -14,7 +14,6 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.CandleData;
 import com.github.mikephil.charting.data.CandleDataSet;
 import com.github.mikephil.charting.data.CandleEntry;
-import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.interfaces.datasets.ICandleDataSet;
 import com.sam_chordas.android.stockhawk.R;
 import com.sam_chordas.android.stockhawk.data.model.Quote;
@@ -79,6 +78,7 @@ public class LineGraphActivity extends Activity {
                 setCandleData();
                 progressBar.setVisibility(View.GONE);
             }else  {
+                candleChart.setVisibility(View.GONE);
                 try {
                     getData();
                 } catch (UnsupportedEncodingException e) {

@@ -2,7 +2,6 @@ package com.sam_chordas.android.stockhawk.rest;
 
 import android.content.ContentProviderOperation;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.sam_chordas.android.stockhawk.data.QuoteColumns;
 import com.sam_chordas.android.stockhawk.data.QuoteProvider;
